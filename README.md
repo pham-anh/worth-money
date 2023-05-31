@@ -1,5 +1,7 @@
 # my_financial
 
+[![codecov](https://codecov.io/gh/pham-anh/worth-money/branch/main/graph/badge.svg?token=IT22ZQSFR9)](https://codecov.io/gh/pham-anh/worth-money)
+
 ## Init firebase hosting
 
 ```bash
