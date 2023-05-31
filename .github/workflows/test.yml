@@ -17,6 +17,3 @@ jobs:
         channel: 'stable' # or: 'beta', 'dev' or 'master'
     - run: flutter --version
     - run: flutter test --coverage
-    - uses: codecov/codecov-action@v3
-      env: CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
