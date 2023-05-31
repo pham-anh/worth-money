@@ -17,9 +17,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Check flutter version
         run: flutter --version
-      - run: wget https://raw.githubusercontent.com/priezz/dart_full_coverage/master/dart-coverage-helper
-      - run: chmod +x dart-coverage-helper
-      - run: ./dart-coverage-helper
       - name: Run test
         run: flutter test --coverage
       - name: Upload coverage reports to Codecov
