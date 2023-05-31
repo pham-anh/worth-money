@@ -5,7 +5,8 @@ name: Test and report
 'on':
   push:
     branches:
-      - **
+      - main
+      - '**'
 
 jobs:
   test_and_report:
