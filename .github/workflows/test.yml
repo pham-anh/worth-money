@@ -13,6 +13,12 @@ jobs:
     container:
       image: ghcr.io/cirruslabs/flutter:3.10.2
     steps:
-    - uses: actions/checkout@v3
-    - run: flutter --version
-    - run: flutter test --coverage
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check flutter version
+        run: flutter --version
+      - name: Run test
+        run: flutter test --coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+            env: CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
