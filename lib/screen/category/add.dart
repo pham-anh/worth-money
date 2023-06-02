@@ -54,7 +54,7 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
                 autofocus: true,
                 controller: _nameController,
                 validator: () => validateName(_nameController.text),
-                title: 'Category name',
+                title: Icons.category,
               ),
               AppNumField(
                 autofocus: false,
@@ -62,7 +62,7 @@ class _CategoryAddPageState extends State<CategoryAddPage> {
                 validator: () {
                   return null;
                 },
-                title: 'Budget',
+                title: Icons.monetization_on,
               ),
               const SizedBox(height: 15),
               Row(

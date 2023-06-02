@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_financial/model/cate.dart';
 import 'package:my_financial/shared/form/_share.dart';
-import '../../model/ex.dart';
-import '../../shared/form/crud.dart';
-import '../../shared/menu_bottom.dart';
-import '../../model/importance.dart';
-import 'list.dart';
+import 'package:my_financial/model/ex.dart';
+import 'package:my_financial/shared/form/crud.dart';
+import 'package:my_financial/shared/menu_bottom.dart';
+import 'package:my_financial/model/importance.dart';
+import 'package:my_financial/screen/expense/list.dart';
 
 class ExpenseAddPage extends StatefulWidget {
   const ExpenseAddPage({
@@ -101,7 +101,8 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   autofocus: true,
                   controller: _amountController,
                   validator: () => validateAmount(_amountController.text),
-                  title: 'Amount',
+                  title: Icons.monetization_on,
+                  isRequired: true,
                 ),
                 AppTextField(
                   maxLength: descriptionMaxLength,
@@ -109,18 +110,15 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   controller: _descriptionController,
                   validator: () =>
                       validateDescription(_descriptionController.text),
-                  title: 'Description',
+                  title: Icons.store,
                 ),
-                DropdownButtonFormField(
-                  value: _importanceController.text,
-                  items: buildImportanceSelect(Importance.list()),
-                  onChanged: (String? val) {
-                    setState(() {
-                      _importanceController.text = val!;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                      labelText: 'Importance of spending'),
+                AppTextField(
+                  maxLength: descriptionMaxLength,
+                  autofocus: false,
+                  controller: _descriptionController,
+                  validator: () =>
+                      validateDescription(_descriptionController.text),
+                  title: Icons.note_alt,
                 ),
                 FutureBuilder(
                     future: Category.list(includeNotSet: true),
@@ -136,7 +134,8 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                             });
                           },
                           decoration:
-                              const InputDecoration(labelText: 'Category'),
+                              const InputDecoration(
+                                label: Icon(Icons.category))
                         );
                       }
 

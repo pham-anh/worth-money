@@ -72,7 +72,7 @@ class _IncomeAddPageState extends State<IncomeAddPage> {
                   autofocus: true,
                   controller: _amountController,
                   validator: () => validateAmount(_amountController.text),
-                  title: 'Amount',
+                  title: Icons.monetization_on,
                 ),
                 AppTextField(
                   maxLength: descriptionMaxLength,
@@ -80,7 +80,7 @@ class _IncomeAddPageState extends State<IncomeAddPage> {
                   controller: _descriptionController,
                   validator: () =>
                       validateDescription(_descriptionController.text),
-                  title: 'Description',
+                  title: Icons.note_alt,
                 ),
                 const SizedBox(height: 12),
                 AppSubmitButton(

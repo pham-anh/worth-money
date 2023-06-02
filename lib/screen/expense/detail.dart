@@ -84,7 +84,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
                   autofocus: false,
                   controller: _amountController,
                   validator: () => validateAmount(_amountController.text),
-                  title: 'Amount',
+                  title: Icons.monetization_on,
                 ),
                 AppTextField(
                   maxLength: descriptionMaxLength,
@@ -92,7 +92,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
                   controller: _descriptionController,
                   validator: () =>
                       validateDescription(_descriptionController.text),
-                  title: 'Description',
+                  title: Icons.note_alt,
                 ),
                 DropdownButtonFormField(
                   value: _importanceController.text,

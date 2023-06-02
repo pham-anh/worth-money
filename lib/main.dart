@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_financial/screen/expense/list.dart';
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
       home: user == null ? const LoginPage() : const ExpenseListPage(),
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.yellow,
+          primarySwatch: Colors.amber,
           backgroundColor: Colors.white,
           errorColor: Colors.deepOrange,
         ),

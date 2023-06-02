@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:my_financial/model/cate.dart';
 import 'package:my_financial/model/currency.dart';
 import 'package:my_financial/screen/dashboard/dashboard.dart';
+import 'package:my_financial/screen/expense/add.dart';
 
 import '../../model/_shared.dart';
 import '../../model/ex.dart';
@@ -15,7 +16,6 @@ import '../../model/importance.dart';
 import '../../shared/app_theme.dart';
 import '../../shared/menu_bottom.dart';
 import '_set_max.dart';
-import 'add.dart';
 import 'detail.dart';
 
 /// @param filterImportance importance name to show in the list (nice, basic...)

@@ -6,10 +6,6 @@ import '../../model/importance.dart';
 
 const descriptionMaxLength = 40;
 String? validateDescription(String description) {
-  if (description.isEmpty) {
-    return 'Description is required';
-  }
-
   if (description.length > descriptionMaxLength) {
     return 'Description is 40 characters max';
   }
@@ -20,7 +16,7 @@ String? validateAmount(String amount) {
   if (amount.isEmpty) {
     return 'Amount is required';
   }
-  if (num.parse(amount) < 0) {
+  if (int.parse(amount) < 0) {
     return 'Amount cannot be less than 0';
   }
   return null;

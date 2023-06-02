@@ -68,7 +68,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                 autofocus: false,
                 controller: _nameController,
                 validator: () => validateName(_nameController.text),
-                title: 'Category name',
+                title: Icons.category,
               ),
               AppNumField(
                 autofocus: false,
@@ -76,7 +76,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                 validator: () {
                   return null;
                 },
-                title: 'Budget',
+                title: Icons.monetization_on,
               ),
               const SizedBox(height: 15),
               Row(

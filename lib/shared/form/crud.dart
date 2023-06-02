@@ -9,6 +9,16 @@ var _actionData = <FormAction, Map<String, dynamic>>{
   FormAction.delete: {'align': Alignment.centerLeft, 'text': 'Delete'},
 };
 
+class AppFormInputElement extends StatelessWidget {
+  final bool isRequired;
+  const AppFormInputElement({this.isRequired = false, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
 class FormActionButton extends StatelessWidget {
   const FormActionButton(
       {this.uuid, required this.action, required this.formKey, Key? key})
@@ -117,8 +127,8 @@ class AppAppBarCancelButton extends StatelessWidget {
   }
 }
 
-class AppTextField extends StatelessWidget {
-  final String title;
+class AppTextField extends AppFormInputElement {
+  final IconData title;
   final TextEditingController controller;
   final String? Function() validator;
   final TextInputType? keyboardType;
@@ -132,6 +142,7 @@ class AppTextField extends StatelessWidget {
     required this.autofocus,
     this.keyboardType,
     this.maxLength,
+    super.isRequired,
     Key? key,
   }) : super(key: key);
 
@@ -144,7 +155,10 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       validator: (val) => validator(),
       decoration: InputDecoration(
-        label: Text(title),
+        label: Row(children: [
+          Icon(title),
+          isRequired ? const Text(' *') : const Text('')
+        ]),
         errorMaxLines: 2,
       ),
       keyboardType: keyboardType ?? keyboardType,
@@ -152,8 +166,8 @@ class AppTextField extends StatelessWidget {
   }
 }
 
-class AppNumField extends StatelessWidget {
-  final String title;
+class AppNumField extends AppFormInputElement {
+  final IconData title;
   final TextEditingController controller;
   final String? Function() validator;
   final int? maxLength;
@@ -165,6 +179,7 @@ class AppNumField extends StatelessWidget {
     required this.validator,
     required this.autofocus,
     this.maxLength,
+    super.isRequired,
     Key? key,
   }) : super(key: key);
 
@@ -176,7 +191,10 @@ class AppNumField extends StatelessWidget {
       controller: controller,
       validator: (val) => validator(),
       decoration: InputDecoration(
-        label: Text(title),
+        label: Row(children: [
+          Icon(title),
+          isRequired ? const Text(' *') : const Text('')
+        ]),
         errorMaxLines: 2,
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: false),
@@ -207,8 +225,7 @@ class AppDateField extends StatelessWidget {
       controller: _dateToShowController,
       keyboardType: TextInputType.datetime,
       decoration: const InputDecoration(
-        labelText: 'Date',
-        errorMaxLines: 2,
+        label: Icon(Icons.calendar_month_sharp),
       ),
       validator: (val) {
         return (val!.isEmpty) ? 'When did you spend the money?' : null;
@@ -254,7 +271,8 @@ class AppSubmitButton extends StatelessWidget {
       child: ElevatedButton(
         style: isDisabled
             ? ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5))
+                backgroundColor:
+                    Theme.of(context).primaryColor.withOpacity(0.5))
             : null,
         onPressed: onPressed,
         child: Padding(
