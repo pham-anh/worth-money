@@ -102,7 +102,6 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   controller: _amountController,
                   validator: () => validateAmount(_amountController.text),
                   title: Icons.monetization_on,
-                  isRequired: true,
                 ),
                 AppTextField(
                   maxLength: descriptionMaxLength,

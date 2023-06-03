@@ -9,16 +9,6 @@ var _actionData = <FormAction, Map<String, dynamic>>{
   FormAction.delete: {'align': Alignment.centerLeft, 'text': 'Delete'},
 };
 
-class AppFormInputElement extends StatelessWidget {
-  final bool isRequired;
-  const AppFormInputElement({this.isRequired = false, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
 class FormActionButton extends StatelessWidget {
   const FormActionButton(
       {this.uuid, required this.action, required this.formKey, Key? key})
@@ -127,7 +117,7 @@ class AppAppBarCancelButton extends StatelessWidget {
   }
 }
 
-class AppTextField extends AppFormInputElement {
+class AppTextField extends StatelessWidget {
   final IconData title;
   final TextEditingController controller;
   final String? Function() validator;
@@ -142,7 +132,6 @@ class AppTextField extends AppFormInputElement {
     required this.autofocus,
     this.keyboardType,
     this.maxLength,
-    super.isRequired,
     Key? key,
   }) : super(key: key);
 
@@ -155,10 +144,7 @@ class AppTextField extends AppFormInputElement {
       controller: controller,
       validator: (val) => validator(),
       decoration: InputDecoration(
-        label: Row(children: [
-          Icon(title),
-          isRequired ? const Text(' *') : const Text('')
-        ]),
+        label: Icon(title),
         errorMaxLines: 2,
       ),
       keyboardType: keyboardType ?? keyboardType,
@@ -166,7 +152,7 @@ class AppTextField extends AppFormInputElement {
   }
 }
 
-class AppNumField extends AppFormInputElement {
+class AppNumField extends StatelessWidget {
   final IconData title;
   final TextEditingController controller;
   final String? Function() validator;
@@ -179,7 +165,6 @@ class AppNumField extends AppFormInputElement {
     required this.validator,
     required this.autofocus,
     this.maxLength,
-    super.isRequired,
     Key? key,
   }) : super(key: key);
 
@@ -191,10 +176,7 @@ class AppNumField extends AppFormInputElement {
       controller: controller,
       validator: (val) => validator(),
       decoration: InputDecoration(
-        label: Row(children: [
-          Icon(title),
-          isRequired ? const Text(' *') : const Text('')
-        ]),
+        label: Icon(title),
         errorMaxLines: 2,
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: false),
