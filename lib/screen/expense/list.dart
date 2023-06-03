@@ -247,8 +247,8 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                     end: _endMonth,
                     amount: e.amount,
                     categoryId: e.categoryId,
-                    description: e.description,
-                    importance: e.importance,
+                    detail: e.description,
+                    store: e.importance,
                   )));
         },
         child: Row(

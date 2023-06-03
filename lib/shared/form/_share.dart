@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import '../../model/cate.dart';
 import '../../model/importance.dart';
 
-const descriptionMaxLength = 40;
+const textInputMaxLength = 40;
 String? validateDescription(String description) {
-  if (description.length > descriptionMaxLength) {
+  if (description.length > textInputMaxLength) {
     return 'Description is 40 characters max';
   }
   return null;

@@ -87,7 +87,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
                   title: Icons.monetization_on,
                 ),
                 AppTextField(
-                  maxLength: descriptionMaxLength,
+                  maxLength: textInputMaxLength,
                   autofocus: false,
                   controller: _descriptionController,
                   validator: () =>

@@ -18,19 +18,15 @@ class ExpenseItem {
             .collection(getCollectionPath(Name.expense));
 
   Future<bool> add() {
-    return collection
-        .doc()
-        .set({
-          'amount': amount.b64,
-          'labels': labels,
-          'detail': detail,
-          'store': store,
-          'date': date,
-        })
-        .then((value) => true)
-        .catchError((error) {
-          log(error);
-          return false;
-        });
+    var data = {
+      'amount': amount.b64,
+      'labels': labels,
+      'detail': detail,
+      'store': store,
+      'date': date,
+    };
+    return collection.doc().set(data).then((value) => true).catchError((error) {
+      throw error;
+    });
   }
 }
