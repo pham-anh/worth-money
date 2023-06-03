@@ -1,5 +1,7 @@
 import 'dart:core';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:my_financial/entity/amount.dart';
 import 'package:my_financial/model/cate.dart';
@@ -14,7 +16,7 @@ class ExpenseAddPage extends StatefulWidget {
     this.date,
     this.amount,
     this.detail,
-    this.categoryId,
+    this.category,
     this.store,
     required this.start,
     required this.end,
@@ -24,10 +26,10 @@ class ExpenseAddPage extends StatefulWidget {
   final String? date;
   final num? amount;
   final String? detail;
-  final String? categoryId;
+  final String? category;
   final String? store;
-  // start and end of current list page in case of cancel button
 
+  // start and end of current list page in case of cancel button
   // any date in the start month
   final DateTime start;
   // any date in the end month
@@ -42,9 +44,10 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
   final _dateController = TextEditingController();
   final _amountController = TextEditingController();
   final _detailController = TextEditingController();
-  final _storeController = TextEditingController();
-  final _categoryController = TextEditingController();
+  int? _categoryIndex;
   bool _isButtonDisabled = false;
+
+  List<Category> categoryList = [];
 
   @override
   void initState() {
@@ -58,9 +61,6 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
     _amountController.text =
         widget.amount == null ? '' : widget.amount!.toString();
     _detailController.text = widget.detail == null ? '' : widget.detail!;
-    _storeController.text = widget.store == null ? '' : widget.store!;
-    _categoryController.text =
-        widget.categoryId == null ? Category.notSet : widget.categoryId!;
   }
 
   @override
@@ -90,7 +90,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppDateField(
                   controller: _dateController,
@@ -102,52 +102,69 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   title: Icons.monetization_on,
                 ),
                 AppTextField(
-                  autofocus: false,
-                  controller: _storeController,
-                  validator: () =>
-                      validateDescription(_storeController.text),
-                  title: Icons.store,
-                ),
-                AppTextField(
                   maxLength: textInputMaxLength,
                   autofocus: false,
                   controller: _detailController,
-                  validator: () =>
-                      validateDescription(_detailController.text),
+                  validator: () => validateDescription(_detailController.text),
                   title: Icons.note_alt,
                 ),
                 FutureBuilder(
                     future: Category.list(includeNotSet: true),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        List<Category> list = snapshot.data as List<Category>;
-                        return DropdownButtonFormField(
-                          value: _categoryController.text,
-                          items: buildCategorySelect(list),
-                          onChanged: (String? cateId) {
-                            setState(() {
-                              _categoryController.text = cateId!;
-                            });
-                          },
-                          decoration:
-                              const InputDecoration(
-                                label: Icon(Icons.category))
-                        );
+                        categoryList = snapshot.data as List<Category>;
+                        return _buildCategorySelectList(categoryList);
                       }
 
                       return const Center(child: Text("Loading..."));
                     }),
                 const SizedBox(height: 12),
-                AppSubmitButton(
-                  text: 'Add',
-                  isDisabled: _isButtonDisabled,
-                  onPressed: _onSubmitButtonClicked,
+                Center(
+                  child: AppSubmitButton(
+                    text: 'Add',
+                    isDisabled: _isButtonDisabled,
+                    onPressed: _onSubmitButtonClicked,
+                  ),
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCategorySelectList(List<Category> list) {
+    Map<int, bool> selected = {};
+    list.asMap().forEach((key, value) {
+      selected[key] = false;
+    });
+    List<Widget> children = [];
+    list.asMap().forEach((index, value) {
+      children.addAll([
+        ChoiceChip(
+          side: BorderSide(color: Color(value.colorCode), width: 2.0),
+          label: Text(value.name),
+          labelPadding: const EdgeInsets.all(0),
+          padding: const EdgeInsets.all(4),
+          selected: _categoryIndex == index,
+          onSelected: (bool selected) {
+            setState(() {
+              _categoryIndex = selected ? index : null;
+            });
+          },
+        ),
+        const SizedBox(width: 5.0)
+      ]);
+    });
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(Icons.category),
+        Wrap(children: children),
+      ],
     );
   }
 
@@ -159,20 +176,26 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
     });
 
     // check validation error
-    if (_formKey.currentState!.validate() == false) {
+    if (_formKey.currentState!.validate() == false || _categoryIndex == null) {
       setState(() {
         _isButtonDisabled = false;
       });
       return;
     }
 
-    // Add expense
-    var ex = ExpenseItem(
-      Amount.fromText(_amountController.text),
-      Timestamp.fromMillisecondsSinceEpoch(
-          int.parse(_dateController.text),
-        ),
+    // collect necessary data
+    Amount money = Amount.fromText(_amountController.text);
+    String? cateName =
+        _categoryIndex == null ? null : categoryList[_categoryIndex!].name;
+    Timestamp date = Timestamp.fromMillisecondsSinceEpoch(
+      int.parse(_dateController.text),
     );
+
+    // Add expense
+    var ex = ExpenseItem(money, date, null, _detailController.text, cateName);
+    if (kDebugMode) {
+      print(ex);
+    }
     var result = await ex.add();
     var message =
         result ? 'The expense was added' : 'Failed to add the expense';

@@ -22,13 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Money',
       home: user == null ? const LoginPage() : const ExpenseListPage(),
-      theme: ThemeData.from(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.amber,
-          backgroundColor: Colors.white,
-          errorColor: Colors.deepOrange,
-        ),
-      ),
+      theme: ThemeData(
+          colorSchemeSeed: const Color(0xff6750a4), useMaterial3: true, ),
     );
   }
 }
