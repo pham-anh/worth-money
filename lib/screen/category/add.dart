@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../model/cate.dart';
 import '../../shared/app_theme.dart';
-import '../../shared/form/crud.dart';
+import '../../shared/form/form_element.dart';
 import '../../shared/menu_bottom.dart';
 import '_share.dart';
 import 'list.dart';
