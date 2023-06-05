@@ -79,7 +79,7 @@ class _IncomeAddPageState extends State<IncomeAddPage> {
                   autofocus: false,
                   controller: _descriptionController,
                   validator: () =>
-                      validateDescription(_descriptionController.text),
+                      validateTextInput(_descriptionController.text),
                   title: Icons.note_alt,
                 ),
                 const SizedBox(height: 12),

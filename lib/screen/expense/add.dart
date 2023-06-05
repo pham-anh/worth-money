@@ -1,7 +1,5 @@
 import 'dart:core';
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:my_financial/entity/amount.dart';
 import 'package:my_financial/model/cate.dart';
@@ -44,6 +42,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
   final _dateController = TextEditingController();
   final _amountController = TextEditingController();
   final _detailController = TextEditingController();
+  final _storeController = TextEditingController();
   int? _categoryIndex;
   bool _isButtonDisabled = false;
 
@@ -52,15 +51,11 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
   @override
   void initState() {
     super.initState();
-    // set time to 12:00
-    final now = DateTime.now();
-    _dateController.text = DateTime(now.year, now.month, now.day, 12)
-        .millisecondsSinceEpoch
-        .toString();
-
+    _dateController.text = DateTime.now().millisecondsSinceEpoch.toString();
     _amountController.text =
         widget.amount == null ? '' : widget.amount!.toString();
     _detailController.text = widget.detail == null ? '' : widget.detail!;
+    _storeController.text = widget.store == null ? '' : widget.store!;
   }
 
   @override
@@ -102,10 +97,16 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   title: Icons.monetization_on,
                 ),
                 AppTextField(
+                  autofocus: false,
+                  controller: _storeController,
+                  validator: () => validateTextInput(_storeController.text),
+                  title: Icons.store,
+                ),
+                AppTextField(
                   maxLength: textInputMaxLength,
                   autofocus: false,
                   controller: _detailController,
-                  validator: () => validateDescription(_detailController.text),
+                  validator: () => validateTextInput(_detailController.text),
                   title: Icons.note_alt,
                 ),
                 FutureBuilder(
@@ -183,19 +184,17 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
       return;
     }
 
-    // collect necessary data
-    Amount money = Amount.fromText(_amountController.text);
-    String? cateName =
-        _categoryIndex == null ? null : categoryList[_categoryIndex!].name;
-    Timestamp date = Timestamp.fromMillisecondsSinceEpoch(
-      int.parse(_dateController.text),
+    // Add expense
+    var ex = ExpenseItem(
+      amount: Amount.fromText(_amountController.text),
+      date:
+          Timestamp.fromMillisecondsSinceEpoch(int.parse(_dateController.text)),
+      store: _storeController.text,
+      detail: _detailController.text,
+      category:
+          _categoryIndex == null ? null : categoryList[_categoryIndex!].name,
     );
 
-    // Add expense
-    var ex = ExpenseItem(money, date, null, _detailController.text, cateName);
-    if (kDebugMode) {
-      print(ex);
-    }
     var result = await ex.add();
     var message =
         result ? 'The expense was added' : 'Failed to add the expense';

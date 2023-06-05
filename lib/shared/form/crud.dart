@@ -210,7 +210,7 @@ class AppDateField extends StatelessWidget {
         label: Icon(Icons.calendar_month_sharp),
       ),
       validator: (val) {
-        return (val!.isEmpty) ? 'When did you spend the money?' : null;
+        return (val!.isEmpty) ? 'Date is required' : null;
       },
       onTap: () async {
         // range 1 year before ~ 1 year later
@@ -223,11 +223,8 @@ class AppDateField extends StatelessWidget {
 
         if (pickedDate != null) {
           _dateToShowController.text = DateFormat.yMMMd().format(pickedDate);
-          // set timestamp in milliseconds to the controller outside. Time must be 12:00
-          controller.text =
-              DateTime(pickedDate.year, pickedDate.month, pickedDate.day, 12)
-                  .millisecondsSinceEpoch
-                  .toString();
+          // set timestamp in milliseconds to the controller outside.
+          controller.text = pickedDate.millisecondsSinceEpoch.toString();
         }
       },
     );

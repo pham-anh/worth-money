@@ -5,7 +5,7 @@ import '../../model/cate.dart';
 import '../../model/importance.dart';
 
 const textInputMaxLength = 40;
-String? validateDescription(String description) {
+String? validateTextInput(String description) {
   if (description.length > textInputMaxLength) {
     return 'Description is 40 characters max';
   }

@@ -91,7 +91,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
                   autofocus: false,
                   controller: _descriptionController,
                   validator: () =>
-                      validateDescription(_descriptionController.text),
+                      validateTextInput(_descriptionController.text),
                   title: Icons.note_alt,
                 ),
                 DropdownButtonFormField(
