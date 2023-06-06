@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_financial/entity/amount.dart';
 import 'package:my_financial/model/cate.dart';
+import 'package:my_financial/model/store.dart';
 import 'package:my_financial/shared/form/_share.dart';
 import 'package:my_financial/model/expense.dart';
 import 'package:my_financial/shared/form/form_element.dart';
@@ -96,12 +97,37 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
                   validator: () => validateAmount(_amountController.text),
                   title: Icons.monetization_on,
                 ),
-                AppTextField(
-                  autofocus: false,
-                  controller: _storeController,
-                  validator: () => validateTextInput(_storeController.text),
-                  title: Icons.store,
-                ),
+                FutureBuilder(
+                    future: Store.list(),
+                    builder: (context, snapshot) {
+                      return Autocomplete(
+                        optionsBuilder:
+                            (TextEditingValue textEditingValue) async {
+                          if (snapshot.hasData && snapshot.data != null) {
+                            List<String> storeOptions = snapshot.data!.toList();
+                            return storeOptions.where((String option) {
+                              return option.contains(
+                                  textEditingValue.text.toLowerCase());
+                            });
+                          }
+                          return const Iterable<String>.empty();
+                        },
+                        fieldViewBuilder: (context, textEditingController,
+                                focusNode, onFieldSubmitted) =>
+                            TextFormField(
+                          controller: textEditingController,
+                          decoration:
+                              const InputDecoration(label: Icon(Icons.store)),
+                          focusNode: focusNode,
+                          onFieldSubmitted: (String value) {
+                            onFieldSubmitted();
+                          },
+                        ),
+                        onSelected: (String selection) {
+                          _storeController.text = selection;
+                        },
+                      );
+                    }),
                 AppTextField(
                   maxLength: textInputMaxLength,
                   autofocus: false,

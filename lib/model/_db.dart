@@ -6,13 +6,9 @@ CollectionReference expensesCol =
     FirebaseFirestore.instance.collection('users/$uid/expenses');
 DateTime now = DateTime.now();
 
-enum Name { expense, v1Expense }
+enum Name { expense, v1Expense, store }
 
-String getCollectionPath(Name name, [isTest = false]) {
-  if (isTest) {
-    return '/users/test_uid/test_expense';
-  }
-
+String getCollectionPath(Name name) {
   var uid = FirebaseAuth.instance.currentUser!.uid;
   var root = '/users/$uid';
 
@@ -21,6 +17,8 @@ String getCollectionPath(Name name, [isTest = false]) {
       return '$root/v2_expenses';
     case Name.v1Expense:
       return '$root/expenses';
+    case Name.store:
+      return '$root/stores';
     default:
       throw Exception('unknown name: $name');
   }

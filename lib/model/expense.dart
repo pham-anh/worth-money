@@ -34,7 +34,7 @@ class ExpenseItem {
     return data.toString();
   }
 
-  Future<bool> add() {
+  Future<bool> add() async {
     var data = {
       'amount': amount.b64,
       'category': category,
