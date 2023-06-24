@@ -1,4 +1,4 @@
-import 'package:my_financial/v2/lib/amount.dart';
+import 'package:my_financial/entity/amount.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

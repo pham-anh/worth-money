@@ -2,10 +2,10 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_financial/shared/form/_share.dart';
-import '../../model/income.dart';
-import '../../shared/form/crud.dart';
-import '../../shared/menu_bottom.dart';
-import 'list.dart';
+import 'package:my_financial/model/income.dart';
+import 'package:my_financial/shared/form/form_element.dart';
+import 'package:my_financial/shared/menu_bottom.dart';
+import 'package:my_financial/screen/income/list.dart';
 
 class IncomeAddPage extends StatefulWidget {
   const IncomeAddPage({this.date, this.amount, this.description, Key? key})
@@ -72,15 +72,15 @@ class _IncomeAddPageState extends State<IncomeAddPage> {
                   autofocus: true,
                   controller: _amountController,
                   validator: () => validateAmount(_amountController.text),
-                  title: 'Amount',
+                  title: Icons.monetization_on,
                 ),
                 AppTextField(
-                  maxLength: descriptionMaxLength,
+                  maxLength: textInputMaxLength,
                   autofocus: false,
                   controller: _descriptionController,
                   validator: () =>
-                      validateDescription(_descriptionController.text),
-                  title: 'Description',
+                      validateTextInput(_descriptionController.text),
+                  title: Icons.note_alt,
                 ),
                 const SizedBox(height: 12),
                 AppSubmitButton(

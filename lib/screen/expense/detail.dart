@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../model/cate.dart';
 import '../../model/ex.dart';
 import '../../model/importance.dart';
-import '../../shared/form/crud.dart';
+import '../../shared/form/form_element.dart';
 import '../../shared/menu_bottom.dart';
 import '../../shared/form/_share.dart';
 import 'list.dart';
@@ -84,15 +84,15 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
                   autofocus: false,
                   controller: _amountController,
                   validator: () => validateAmount(_amountController.text),
-                  title: 'Amount',
+                  title: Icons.monetization_on,
                 ),
                 AppTextField(
-                  maxLength: descriptionMaxLength,
+                  maxLength: textInputMaxLength,
                   autofocus: false,
                   controller: _descriptionController,
                   validator: () =>
-                      validateDescription(_descriptionController.text),
-                  title: 'Description',
+                      validateTextInput(_descriptionController.text),
+                  title: Icons.note_alt,
                 ),
                 DropdownButtonFormField(
                   value: _importanceController.text,

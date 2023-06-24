@@ -118,7 +118,7 @@ class AppAppBarCancelButton extends StatelessWidget {
 }
 
 class AppTextField extends StatelessWidget {
-  final String title;
+  final IconData title;
   final TextEditingController controller;
   final String? Function() validator;
   final TextInputType? keyboardType;
@@ -144,7 +144,7 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       validator: (val) => validator(),
       decoration: InputDecoration(
-        label: Text(title),
+        label: Icon(title),
         errorMaxLines: 2,
       ),
       keyboardType: keyboardType ?? keyboardType,
@@ -153,7 +153,7 @@ class AppTextField extends StatelessWidget {
 }
 
 class AppNumField extends StatelessWidget {
-  final String title;
+  final IconData title;
   final TextEditingController controller;
   final String? Function() validator;
   final int? maxLength;
@@ -176,7 +176,7 @@ class AppNumField extends StatelessWidget {
       controller: controller,
       validator: (val) => validator(),
       decoration: InputDecoration(
-        label: Text(title),
+        label: Icon(title),
         errorMaxLines: 2,
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: false),
@@ -207,11 +207,10 @@ class AppDateField extends StatelessWidget {
       controller: _dateToShowController,
       keyboardType: TextInputType.datetime,
       decoration: const InputDecoration(
-        labelText: 'Date',
-        errorMaxLines: 2,
+        label: Icon(Icons.calendar_month_sharp),
       ),
       validator: (val) {
-        return (val!.isEmpty) ? 'When did you spend the money?' : null;
+        return (val!.isEmpty) ? 'Date is required' : null;
       },
       onTap: () async {
         // range 1 year before ~ 1 year later
@@ -224,11 +223,8 @@ class AppDateField extends StatelessWidget {
 
         if (pickedDate != null) {
           _dateToShowController.text = DateFormat.yMMMd().format(pickedDate);
-          // set timestamp in milliseconds to the controller outside. Time must be 12:00
-          controller.text =
-              DateTime(pickedDate.year, pickedDate.month, pickedDate.day, 12)
-                  .millisecondsSinceEpoch
-                  .toString();
+          // set timestamp in milliseconds to the controller outside.
+          controller.text = pickedDate.millisecondsSinceEpoch.toString();
         }
       },
     );
@@ -254,7 +250,8 @@ class AppSubmitButton extends StatelessWidget {
       child: ElevatedButton(
         style: isDisabled
             ? ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5))
+                backgroundColor:
+                    Theme.of(context).primaryColor.withOpacity(0.5))
             : null,
         onPressed: onPressed,
         child: Padding(

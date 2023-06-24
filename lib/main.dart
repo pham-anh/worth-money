@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_financial/screen/expense/list.dart';
-import 'firebase_options.dart';
+import 'package:my_financial/firebase_options.dart';
 import 'package:my_financial/screen/login/login.dart';
 
 void main() async {
@@ -22,13 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Money',
       home: user == null ? const LoginPage() : const ExpenseListPage(),
-      theme: ThemeData.from(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.yellow,
-          backgroundColor: Colors.white,
-          errorColor: Colors.deepOrange,
-        ),
-      ),
+      theme: ThemeData(
+          colorSchemeSeed: const Color(0xff6750a4), useMaterial3: true, ),
     );
   }
 }

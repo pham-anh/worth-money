@@ -3,7 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:my_financial/screen/category/list.dart';
 import '../../model/cate.dart';
 import '../../shared/app_theme.dart';
-import '../../shared/form/crud.dart';
+import '../../shared/form/form_element.dart';
 import '../../shared/menu_bottom.dart';
 import '_share.dart';
 
@@ -68,7 +68,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                 autofocus: false,
                 controller: _nameController,
                 validator: () => validateName(_nameController.text),
-                title: 'Category name',
+                title: Icons.category,
               ),
               AppNumField(
                 autofocus: false,
@@ -76,7 +76,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                 validator: () {
                   return null;
                 },
-                title: 'Budget',
+                title: Icons.monetization_on,
               ),
               const SizedBox(height: 15),
               Row(
