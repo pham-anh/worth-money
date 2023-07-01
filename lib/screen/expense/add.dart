@@ -212,7 +212,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
 
     // Add expense
     var ex = ExpenseItem(
-      amount: Amount.fromText(_amountController.text),
+      amount: num.parse(_amountController.text),
       date:
           Timestamp.fromMillisecondsSinceEpoch(int.parse(_dateController.text)),
       store: _storeController.text,

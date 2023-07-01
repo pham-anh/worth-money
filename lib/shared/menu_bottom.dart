@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:my_financial/screen/category/list.dart';
 import 'package:my_financial/screen/profile/profile.dart';
-import '../screen/dashboard/dashboard.dart';
-import '../screen/expense/list.dart';
-import '../screen/income/list.dart';
+import 'package:my_financial/screen/dashboard/dashboard.dart';
+import 'package:my_financial/screen/expense/list.dart';
+import 'package:my_financial/screen/expense/list2.dart';
+import 'package:my_financial/screen/income/list.dart';
 
 enum AppMenuItem {
   dashboard,
   expense,
+  expense2,
   budget,
   income,
   profile,
@@ -23,6 +25,10 @@ class _AppMenuBottom {
     ),
     AppMenuItem.expense: const BottomNavigationBarItem(
       icon: Icon(Icons.shopping_bag_outlined),
+      label: 'Expense',
+    ),
+    AppMenuItem.expense2: const BottomNavigationBarItem(
+      icon: Icon(Icons.list),
       label: 'Expense',
     ),
     AppMenuItem.budget: const BottomNavigationBarItem(
@@ -48,6 +54,7 @@ class _AppMenuBottom {
     AppMenuItem.profile: const ProfilePage(), 
     AppMenuItem.income: const IncomeListPage(), 
     AppMenuItem.expense: const ExpenseListPage(),
+    AppMenuItem.expense2: const Expense2ListPage(),
   };
 }
 

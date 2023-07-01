@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
       title: 'My Money',
       home: user == null ? const LoginPage() : const ExpenseListPage(),
       theme: ThemeData(
-          colorSchemeSeed: const Color(0xff6750a4), useMaterial3: true, ),
+        colorSchemeSeed: const Color(0xFF03396c),
+        useMaterial3: true,
+      ),
     );
   }
 }
