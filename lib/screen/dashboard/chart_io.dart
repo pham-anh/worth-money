@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import '../../model/analytics.dart';
 import '../../model/currency.dart';
 import '../../model/user.dart';
@@ -40,111 +40,104 @@ class _ChartMonthlyIOState extends State<ChartMonthlyIO> {
               io = snapshot.data[1] as MonthlyIO;
             }
 
-            var seriesList = [
-              charts.Series<MonthlyFigure, String>(
-                  id: 'income',
-                  displayName: "Income",
-                  data: io!.income,
-                  domainFn: (MonthlyFigure el, _) => el.month.month.toString(),
-                  measureFn: (MonthlyFigure el, _) => el.amount,
-                  colorFn: (datum, index) =>
-                      charts.Color.fromHex(code: '#F57F17'),
-                  labelAccessorFn: (MonthlyFigure el, _) =>
-                      _formatCurrency(el.amount))
-                ..setAttribute(charts.rendererIdKey, 'customLine'),
-              charts.Series<MonthlyFigure, String>(
-                id: 'spending',
-                displayName: "Spending",
-                data: io.spending,
-                domainFn: (MonthlyFigure el, _) => el.month.month.toString(),
-                measureFn: (MonthlyFigure el, _) => el.amount,
-                colorFn: (datum, index) =>
-                    charts.Color.fromHex(code: '#E91E63'),
-                labelAccessorFn: (MonthlyFigure el, _) =>
-                    _formatCurrency(el.amount),
-              )..setAttribute(charts.rendererIdKey, 'customLine'),
-              charts.Series<MonthlyFigure, String>(
-                  id: 'balance',
-                  displayName: "Balance",
-                  data: io.balance,
-                  domainFn: (MonthlyFigure el, _) => el.month.month.toString(),
-                  measureFn: (MonthlyFigure el, _) => el.amount,
-                  labelAccessorFn: (MonthlyFigure el, _) =>
-                    _formatCurrency(el.amount),
-                colorFn: (datum, index) =>
-                    charts.Color.fromHex(code: '#4FC3F7'),
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.75,
+              padding: const EdgeInsets.all(16.0),
+              child: Stack(
+                children: [
+                  BarChart(
+                    BarChartData(
+                      barGroups: _getBarGroups(io!),
+                      titlesData: FlTitlesData(
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+                        ),
+                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      ),
+                      gridData: FlGridData(show: false),
+                      borderData: FlBorderData(
+                        show: true,
+                        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 1),
+                      ),
+                    ),
+                  ),
+                  LineChart(
+                    LineChartData(
+                      gridData: FlGridData(show: false),
+                      titlesData: FlTitlesData(
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+                        ),
+                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      ),
+                      borderData: FlBorderData(
+                        show: true,
+                        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 1),
+                      ),
+                      lineBarsData: _getLineBarsData(io!),
+                    ),
+                  ),
+                ],
               ),
-            ];
-
-            final children = <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.75,
-                child: charts.OrdinalComboChart(
-                  seriesList,
-                  animate: true,
-                  defaultRenderer: charts.BarRendererConfig(
-                      groupingType: charts.BarGroupingType.grouped,
-                      fillPattern: charts.FillPatternType.solid),
-                  customSeriesRenderers: [
-                    charts.LineRendererConfig(customRendererId: 'customLine'),
-                  ],
-                  primaryMeasureAxis: charts.NumericAxisSpec(
-                    tickFormatterSpec:
-                        charts.BasicNumericTickFormatterSpec.fromNumberFormat(
-                            Currency.currencyFormatterForChart(_currency)),
-                    tickProviderSpec: const charts.BasicNumericTickProviderSpec(
-                        desiredMinTickCount: 5),
-                  ),
-                  layoutConfig: charts.LayoutConfig(
-                    leftMarginSpec:
-                        charts.MarginSpec.fromPercent(minPercent: 12),
-                    topMarginSpec: charts.MarginSpec.fixedPixel(30),
-                    rightMarginSpec: charts.MarginSpec.fixedPixel(20),
-                    bottomMarginSpec: charts.MarginSpec.fixedPixel(30),
-                  ),
-                  selectionModels: [
-                    charts.SelectionModelConfig(
-                      type: charts.SelectionModelType.info,
-                    )
-                  ],
-                  behaviors: [
-                    charts.ChartTitle("Monthly In/Out"),
-                    // charts.InitialSelection(selectedDataConfig: [
-                    //   charts.SeriesDatumConfig<String>("balance", "3"),
-                    //   charts.SeriesDatumConfig<String>("spending", "3"),
-                    //   charts.SeriesDatumConfig<String>("income", "3"),
-                    // ]),
-                    charts.DomainHighlighter(),
-                    charts.LinePointHighlighter(
-                      showHorizontalFollowLine:
-                          charts.LinePointHighlighterFollowLineType.nearest,
-                      showVerticalFollowLine:
-                          charts.LinePointHighlighterFollowLineType.nearest,
-                    ),
-                    charts.SelectNearest(
-                        eventTrigger: charts.SelectionTrigger.tapAndDrag),
-                    charts.SeriesLegend(
-                      cellPadding: const EdgeInsets.all(3.0),
-                      legendDefaultMeasure: charts.LegendDefaultMeasure.average,
-                      horizontalFirst: false,
-                      position: charts.BehaviorPosition.bottom,
-                      showMeasures: true,
-                      measureFormatter: (num? amount) {
-                        return amount == null ? '-' : _formatCurrency(amount);
-                      },
-                    ),
-                  ],
-                ),
-              )
-            ];
-
-            return Column(children: children);
+            );
           }
 
           return const Center(child: CircularProgressIndicator());
         },
       ),
     );
+  }
+
+  List<LineChartBarData> _getLineBarsData(MonthlyIO io) {
+    final incomeData = io.income.asMap().entries.map((entry) {
+      return FlSpot(entry.key.toDouble(), entry.value.amount.toDouble());
+    }).toList();
+
+    final spendingData = io.spending.asMap().entries.map((entry) {
+      return FlSpot(entry.key.toDouble(), entry.value.amount.toDouble());
+    }).toList();
+
+    final theme = Theme.of(context);
+    return [
+      LineChartBarData(
+        spots: incomeData,
+        isCurved: true,
+        color: theme.colorScheme.primary,
+        barWidth: 4,
+        isStrokeCapRound: true,
+        belowBarData: BarAreaData(show: false),
+      ),
+      LineChartBarData(
+        spots: spendingData,
+        isCurved: true,
+        color: theme.colorScheme.secondary,
+        barWidth: 4,
+        isStrokeCapRound: true,
+        belowBarData: BarAreaData(show: false),
+      ),
+    ];
+  }
+
+  List<BarChartGroupData> _getBarGroups(MonthlyIO io) {
+    return io.balance.asMap().entries.map((entry) {
+      return BarChartGroupData(
+        x: entry.key,
+        barRods: [
+          BarChartRodData(
+            toY: entry.value.amount.toDouble(),
+            color: Theme.of(context).colorScheme.tertiary,
+          )
+        ],
+      );
+    }).toList();
   }
 
   String _formatCurrency(num amount) {

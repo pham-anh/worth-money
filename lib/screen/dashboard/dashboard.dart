@@ -44,7 +44,7 @@ class _DashBoardPageState extends State<DashboardPage> {
         ]),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return const Text('Something went wrong');
+            return Text('Something went wrong', style: Theme.of(context).textTheme.bodyLarge);
           }
           if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
@@ -126,10 +126,11 @@ class _DashBoardPageState extends State<DashboardPage> {
             }
 
             // if both this month and last month has no data then show nothing
-            return const Center(
+            return Center(
                 child: Text(
               'Not enough data for analytics.\nLet\'s add some budgets and expenses.',
               textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
             ));
           }
 
