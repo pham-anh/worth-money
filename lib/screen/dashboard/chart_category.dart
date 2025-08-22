@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import '../../model/currency.dart';
 import '../../model/ex.dart';
 import '../../model/analytics.dart';
@@ -30,61 +30,56 @@ class ChartByCategory extends StatelessWidget {
               snapshot.connectionState == ConnectionState.done) {
             List<SpendingByCategory> thisMonthData =
                 snapshot.data[0] as List<SpendingByCategory>;
-            var seriesList = [
-              charts.Series<SpendingByCategory, String>(
-                id: 'data',
-                data: thisMonthData,
-                domainFn: (SpendingByCategory el, _) {
-                  return el.category.length <= 10
-                      ? el.category
-                      : '${el.category.substring(0, 9)}...';
-                },
-                measureFn: (SpendingByCategory el, _) => el.spending,
-                colorFn: (SpendingByCategory el, _) => charts.Color(
-                  r: Color(el.colorCode).red,
-                  g: Color(el.colorCode).green,
-                  b: Color(el.colorCode).blue,
-                ),
-                overlaySeries: true,
-                labelAccessorFn: (SpendingByCategory el, _) =>
-                    "${el.category}\n${Currency.getIntlMoney(el.spending, currency)}",
-              ),
-            ];
-            return charts.PieChart<String>(
-              seriesList,
-              animate: true,
-              defaultRenderer: charts.ArcRendererConfig(
-                arcWidth: 100,
-                arcRendererDecorators: [
-                  charts.ArcLabelDecorator(
-                      labelPosition: charts.ArcLabelPosition.auto),
-                ],
-              ),
-              behaviors: [
-                charts.ChartTitle(
-                  title,
-                ),
-              ],
-              selectionModels: [
-                charts.SelectionModelConfig(
-                    type: charts.SelectionModelType.info,
-                    updatedListener: (charts.SelectionModel model) {
-                      if (!model.hasDatumSelection) {
-                        return;
-                      }
-
-                      SpendingByCategory spending =
-                          model.selectedDatum[0].datum as SpendingByCategory;
+            return PieChart(
+              PieChartData(
+                sections: _getSections(thisMonthData),
+                centerSpaceRadius: 40,
+                sectionsSpace: 2,
+                pieTouchData: PieTouchData(
+                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                    if (!event.isInterestedForInteractions ||
+                        pieTouchResponse == null ||
+                        pieTouchResponse.touchedSection == null) {
+                      return;
+                    }
+                    final touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    if (event is FlTapUpEvent) {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ExpenseListPage(
-                                filterCategory: spending.category,
+                                filterCategory: thisMonthData[touchedIndex].category,
                               )));
-                    })
-              ],
+                    }
+                  },
+                ),
+              ),
             );
           }
 
           return const Center(child: CircularProgressIndicator());
         });
+  }
+
+  List<PieChartSectionData> _getSections(List<SpendingByCategory> data) {
+    return data
+        .asMap()
+        .map<int, PieChartSectionData>((index, data) {
+          final double fontSize = 16;
+          final double radius = 50;
+          final value = PieChartSectionData(
+            color: Color(data.colorCode),
+            value: data.spending.toDouble(),
+            title: data.category,
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xffffffff)),
+          );
+
+          return MapEntry(index, value);
+        })
+        .values
+        .toList();
   }
 }

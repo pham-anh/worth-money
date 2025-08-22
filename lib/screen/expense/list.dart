@@ -2,7 +2,7 @@ import 'dart:core';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_financial/model/cate.dart';
 import 'package:my_financial/model/currency.dart';
@@ -13,7 +13,6 @@ import '../../model/_shared.dart';
 import '../../model/ex.dart';
 import '../../model/user.dart';
 import '../../model/importance.dart';
-import '../../shared/app_theme.dart';
 import '../../shared/menu_bottom.dart';
 import '_set_max.dart';
 import 'detail.dart';
@@ -180,12 +179,17 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
     return ExpansionTile(
       maintainState: true,
       key: Key(DateFormat.yMMM().format(month)),
-      trailing: Text(Currency.getIntlMoney(total, _currency),
-          style: GoogleFonts.oswald()),
+      trailing: Text(
+        Currency.getIntlMoney(total, _currency),
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(DateFormat.yMMM().format(month), style: GoogleFonts.oswald()),
+          Text(
+            DateFormat.yMMM().format(month),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           !_isShowingFuture && month == _thisMonth
               ? ElevatedButton(
                   onPressed: () {
@@ -203,9 +207,9 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                   },
                   child: Text(
                     maxText,
-                    style: GoogleFonts.oswald(
-                      textStyle: TextStyle(color: MyAppTheme.colorError),
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                   ),
                 )
               : const Text(""),
@@ -228,7 +232,18 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
   Widget _buildExpenseRow(Expense e, {bool visible = true}) {
     return Visibility(
       visible: visible,
-      child: InkWell(
+      child: ListTile(
+        leading: _buildLeading(e.importance),
+        title: _buildTitle(e),
+        subtitle: _buildSubtitle(e),
+        trailing: Text(
+          Currency.getIntlMoney(e.amount, _currency),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: e.amount == 0
+                    ? Theme.of(context).colorScheme.error
+                    : Theme.of(context).colorScheme.onSurface,
+              ),
+        ),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ExpenseDetailPage(
@@ -240,7 +255,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                     importance: e.importance,
                   )));
         },
-        onDoubleTap: () {
+        onLongPress: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ExpenseAddPage(
                     start: _startMonth,
@@ -251,32 +266,6 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                     store: e.importance,
                   )));
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.only(top: 20, bottom: 20, right: 10),
-              child: _buildLeading(e.importance),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [_buildTitle(e), _buildSubtitle(e)],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(top: 20, bottom: 20, right: 10),
-              child: Text(
-                Currency.getIntlMoney(e.amount, _currency),
-                style: TextStyle(
-                  color: e.amount == 0
-                      ? MyAppTheme.colorError
-                      : const Color(0xFF343434),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -285,7 +274,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
     var text = Importance.getI18nText('en', importance);
     return Icon(
       Importance.getIcon(importance),
-      color: Importance.getColor(importance),
+      color: Importance.getColor(context, importance),
       semanticLabel: text,
     );
   }
@@ -297,16 +286,15 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
         text: e.description.characters.length <= textMaxLength
             ? e.description
             : '${e.description.substring(0, textMaxLength)}...',
-        style: const TextStyle(
-            color: Color(0xFF343434), overflow: TextOverflow.clip),
+        style: Theme.of(context).textTheme.bodyLarge,
         children: [
           e.categoryName == Category.notSetText
               ? const TextSpan(text: '')
               : TextSpan(
                   text: '  ${e.categoryName!}',
-                  style: GoogleFonts.oswald(
-                    textStyle: TextStyle(color: Color(e.categoryColor!)),
-                  ),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Color(e.categoryColor!),
+                      ),
                 ),
         ],
       ),
@@ -318,10 +306,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Text(
         DateFormat.MMMEd().format(e.ts.toDate()),
-        style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 12,
-            overflow: TextOverflow.clip),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
     );
   }

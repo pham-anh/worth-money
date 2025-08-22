@@ -1,6 +1,5 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import '../shared/app_theme.dart';
 
 class Importance {
   static const basic = 'basic';
@@ -27,16 +26,17 @@ class Importance {
     }
   }
 
-  static Color getColor(String importance) {
+  static Color getColor(BuildContext context, String importance) {
+    final colorScheme = Theme.of(context).colorScheme;
     switch (importance) {
       case basic:
-        return MyAppTheme.myPrimarySwatch.shade200;
+        return colorScheme.primary;
       case nice:
-        return MyAppTheme.myPrimarySwatch.shade300;
+        return colorScheme.secondary;
       case wasted:
-        return MyAppTheme.myPrimarySwatch.shade900;
+        return colorScheme.tertiary;
       default:
-        return MyAppTheme.myPrimarySwatch.shade50;
+        return colorScheme.outline;
     }
   }
 
